@@ -48,7 +48,7 @@ class AppContainer(context: Context) {
         val internalWorkspace = appContext.filesDir.toPath().resolve("workspace")
         val externalWorkspace = appContext.getExternalFilesDir(null)?.toPath()?.resolve("workspace")
         val roots = listOfNotNull(internalWorkspace, externalWorkspace).distinct()
-        roots.forEach(Files::createDirectories)
+        roots.forEach { Files.createDirectories(it) }
         normalProvider = LocalFileAccessProvider("normal", roots, AccessMode.NORMAL)
         providerRegistry = ProviderRegistry(listOf(normalProvider, safProvider))
         capabilityManager = CapabilityManager(providerRegistry)

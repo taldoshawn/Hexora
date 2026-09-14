@@ -162,7 +162,8 @@ class FileOperationEngine(
             try {
                 provider.rename(temp.ref, original.name)
             } catch (failure: Throwable) {
-                runCatching { provider.rename(backup.ref, original.name) }
+                val recovery = requireNotNull(backup)
+                runCatching { provider.rename(recovery.ref, original.name) }
                 throw failure
             }
         } catch (failure: Throwable) {

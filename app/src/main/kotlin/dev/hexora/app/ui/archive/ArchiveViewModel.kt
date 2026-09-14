@@ -56,7 +56,7 @@ class ArchiveViewModel(
                             _state.update { it.copy(extracting = progress) }
                         }
                     } catch (failure: Throwable) {
-                        if (Files.list(destination).use { it.findAny().isEmpty }) Files.deleteIfExists(destination)
+                        if (Files.list(destination).use { !it.findAny().isPresent }) Files.deleteIfExists(destination)
                         throw failure
                     }
                     destination.fileName.toString()

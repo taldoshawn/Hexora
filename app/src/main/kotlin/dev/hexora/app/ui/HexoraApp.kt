@@ -78,8 +78,9 @@ fun HexoraApp(container: AppContainer) {
                     screen = when (event.handler) {
                         FileHandlerKind.TEXT_EDITOR -> WorkspaceScreen.TextEditor(event.entry)
                         FileHandlerKind.ZIP_ARCHIVE,
-                        FileHandlerKind.APK_INSPECTOR
-                        -> if (container.providerRegistry.require(event.entry.ref) is LocalFileAccessProvider) {
+                        FileHandlerKind.APK_INSPECTOR -> if (
+                            container.providerRegistry.require(event.entry.ref) is LocalFileAccessProvider
+                        ) {
                             WorkspaceScreen.Archive(event.entry)
                         } else {
                             WorkspaceScreen.HexEditor(event.entry)
