@@ -65,7 +65,15 @@ jobs:
           echo "ORG_GRADLE_PROJECT_hexoraSigningStoreFile=$KEYSTORE_PATH" >> "$GITHUB_ENV"
 
       - name: Run lint
-        run: ./gradlew lint --stacktrace
+        run: |
+          lint_status=0
+          ./gradlew lint --stacktrace || lint_status=$?
+          if (( lint_status != 0 )); then
+            while IFS= read -r report; do
+              sed -n '1,1600p' "$report"
+            done < <(find . -type f -name 'lint-results-*.txt' -print)
+            exit "$lint_status"
+          fi
 
       - name: Run tests
         run: ./gradlew test --stacktrace
