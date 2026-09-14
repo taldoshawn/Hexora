@@ -2,7 +2,6 @@
 package dev.hexora.app.storage
 
 import android.content.Context
-import android.os.Build
 import android.os.Environment
 import dev.hexora.core.model.AccessMode
 
@@ -22,7 +21,7 @@ class AccessStatusProvider(private val context: Context) {
             AccessMode.FULL_STORAGE,
             "Todos os arquivos",
             "Acesso amplo sujeito às proteções do Android",
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R,
+            true,
             Environment.isExternalStorageManager(),
         ),
         AccessStatus(AccessMode.SHIZUKU, "Shizuku", "Planejado para a Fase 2", false, false),

@@ -1,8 +1,10 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 package dev.hexora.app.storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import dev.hexora.core.file.FileAccessProvider
 import dev.hexora.core.file.FileConflictException
@@ -49,7 +51,7 @@ class SafFileAccessProvider(private val context: Context) : FileAccessProvider {
         tokenByUri.clear()
         rootTokens.clear()
         uriStrings.forEach { raw ->
-            val uri = runCatching { Uri.parse(raw) }.getOrNull() ?: return@forEach
+            val uri = runCatching { raw.toUri() }.getOrNull() ?: return@forEach
             val document = DocumentFile.fromTreeUri(context, uri) ?: return@forEach
             val token = register(document, uri, parentToken = null)
             rootTokens += token
@@ -91,6 +93,8 @@ class SafFileAccessProvider(private val context: Context) : FileAccessProvider {
             toEntry(token, child)
         }
 
+    // Ownership is intentionally transferred to FileAccessProvider callers, which close via use().
+    @SuppressLint("Recycle")
     override suspend fun openInput(ref: FileRef): InputStream = withContext(Dispatchers.IO) {
         val document = requireGranted(ref).document
         require(document.isFile && document.canRead()) { "Document is not readable" }
@@ -98,6 +102,8 @@ class SafFileAccessProvider(private val context: Context) : FileAccessProvider {
             ?: throw FileNotFoundException("Document provider returned no input stream")
     }
 
+    // Ownership is intentionally transferred to FileAccessProvider callers, which close via use().
+    @SuppressLint("Recycle")
     override suspend fun openOutput(ref: FileRef, truncate: Boolean): OutputStream = withContext(Dispatchers.IO) {
         val document = requireGranted(ref).document
         require(document.isFile && document.canWrite()) { "Document is not writable" }
