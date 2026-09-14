@@ -1,0 +1,17 @@
+*.iml
+.gradle/
+.idea/
+local.properties
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.jks
+*.keystore
+*.p12
+*.pfx
+keystore.properties
+signing.properties
+app/schemas/*
+!app/schemas/.gitkeep
