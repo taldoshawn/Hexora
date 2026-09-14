@@ -49,7 +49,7 @@ class SafFileAccessProvider(private val context: Context) : FileAccessProvider {
         tokenByUri.clear()
         rootTokens.clear()
         uriStrings.forEach { raw ->
-            val uri = runCatching(Uri::parse).getOrNull() ?: return@forEach
+            val uri = runCatching { Uri.parse(raw) }.getOrNull() ?: return@forEach
             val document = DocumentFile.fromTreeUri(context, uri) ?: return@forEach
             val token = register(document, uri, parentToken = null)
             rootTokens += token
@@ -152,6 +152,7 @@ class SafFileAccessProvider(private val context: Context) : FileAccessProvider {
         require(granted.document.delete()) { "Document provider rejected deletion" }
         documents.remove(ref.opaqueId)
         tokenByUri.remove(granted.document.uri.toString())
+        Unit
     }
 
     private fun register(document: DocumentFile, rootUri: Uri, parentToken: String?): String {
