@@ -124,6 +124,7 @@ class LocalFileAccessProvider(
         } else {
             Files.delete(path)
         }
+        Unit
     }
 
     override suspend fun moveNative(
